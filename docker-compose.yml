@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+    backend:
+        container_name: backend
+        build: ./backend-express
+        ports:
+            - 3000:3000
+        env_file:
+            - ./backend-express/.env
+        depends_on:
+            - customer_base
+                # condition: service_healthy
+        volumes:
+            - .:/app
+
+    customer_base:
+        container_name: customer_base
+        image: postgres:14-alpine
+        ports:
+            - 5432:5432
+        env_file:
+            - ./backend-express/.env
+        # healthcheck:
+        #     test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+        #     interval: 10s
+        #     timeout: 5s
+        #     retries: 5
+        #     start_period: 5s
+
+    frontend:
+        container_name: frontend
+        build: ./frontend
+        ports:
+            - 3001:3001
+        depends_on:
+            backend:
+                condition: service_completed_successfully
