@@ -1,20 +1,20 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IPost } from "../interfaces/IPost";
-import { IUser, IUserLogin } from "../interfaces/IUser";
+import { IUser, IUserLogin, IUserRequest } from "../interfaces/IUser";
 import { IUserContext } from "../interfaces/IUserContext";
 import { IUserProvider } from "../interfaces/IUserProvider";
 import api from "../service/api";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { ClientsContext } from "./ClientsContext";
+import { IError } from "../interfaces/IError";
 
 export const UserContext = createContext<IUserContext>({} as IUserContext);
 
 const UserProvider = ({ children }: IUserProvider) => {
-	const [login, setLogin] = useState(false);
 	const [user, setUser] = useState<IUser>({} as IUser);
-	const { getClients } = useContext(ClientsContext);
+	const { clientsList, getClients } = useContext(ClientsContext);
 
 	const navigate = useNavigate();
 
@@ -25,8 +25,6 @@ const UserProvider = ({ children }: IUserProvider) => {
 			setUser(
 				JSON.parse(localStorage.getItem("@cadastro-clientes:user")!)
 			);
-			setLogin(true);
-		} else {
 		}
 	}, []);
 
@@ -36,50 +34,64 @@ const UserProvider = ({ children }: IUserProvider) => {
 		try {
 			const res = await api.post<IPost>("/login/users", data);
 			console.log(res);
-			const { user: userResponse } = res.data;
+			const { user } = res.data;
 			const token = JSON.stringify(res.data.token)?.replace(/"/gi, "");
-			setUser(userResponse);
-
+			setUser(user);
+			getClients();
 			localStorage.setItem(
 				"@cadastro-clientes:user",
-				JSON.stringify(userResponse)
+				JSON.stringify(user)
 			);
 			localStorage.setItem(
 				"@cadastro-clientes:userId",
-				JSON.stringify(res.data.user.id)
+				JSON.stringify(user.id)
 			);
 			localStorage.setItem("@cadastro-clientes:token", token);
-
-			setLogin(true);
-			getClients();
 
 			navigate("/dashboard");
 
 			toast.success("Login efetuado com sucesso!");
 		} catch (error) {
-			const err = error as AxiosError;
+			const err = error as AxiosError<IError>;
 			console.log(err);
-			toast.error("Erro ao efetuar Login!");
-		} finally {
+			if (err.response?.data.message === "Wrong password or email") {
+				toast.error("Email ou senha inválidos!");
+			} else {
+				toast.error("Algo deu errado! Tente novamente!");
+			}
 		}
 	};
 
 	const Logout = () => {
-		setLogin(false);
 		localStorage.removeItem("@cadastro-clientes:token");
 		localStorage.removeItem("@cadastro-clientes:userId");
 		localStorage.removeItem("@cadastro-clientes:user");
 		navigate("/");
 	};
 
+	const onSubmitRegister = async (data: IUserRequest) => {
+		try {
+			await api.post<IUser>("/users", data);
+			toast.success("Cadastro efetuado com sucesso");
+			navigate("/login");
+		} catch (error) {
+			const err = error as AxiosError<IError>;
+			console.log(err);
+			if (err.response?.data.message === "Email already exits") {
+				toast.error("Email já cadastrado!");
+			} else {
+				toast.error("Algo deu errado! Tente novamente!");
+			}
+		}
+	};
+
 	return (
 		<UserContext.Provider
 			value={{
-				login,
-				setLogin,
 				user,
 				SignIn,
 				Logout,
+				onSubmitRegister,
 			}}
 		>
 			{children}

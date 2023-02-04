@@ -43,7 +43,6 @@ const ClientsProvider = ({ children }: IClientsProvider) => {
 
 	const getClients = async () => {
 		try {
-			api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 			const res = await api.get<IClient[]>("/clients");
 			setClientsList(res.data);
 		} catch (error) {
@@ -78,7 +77,6 @@ const ClientsProvider = ({ children }: IClientsProvider) => {
 			await api.post<IClientRequest>("/clients", data);
 			toast.success("Cliente cadastrado com sucesso!");
 			handleCloseModalRegisterClient();
-			getClients();
 		} catch (error) {
 			const err = error as AxiosError<IError>;
 			console.log(err);

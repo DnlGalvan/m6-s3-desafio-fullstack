@@ -38,7 +38,8 @@ export default function Content() {
 								sx={{ mr: 1 }}
 								onClick={handleOpenModalRegisterClient}
 							>
-								<AddIcon />Cliente
+								<AddIcon />
+								Cliente
 							</Button>
 							<Modal
 								open={openModalRegisterClient}

@@ -1,60 +1,68 @@
+import { useContext } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { UserContext } from "../../context/UserContext";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { IUserRequest } from "../../interfaces/IUser";
+import { schemaRegisterUser } from "../../validations/RegisterUser";
 
 const FormRegister = () => {
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		console.log({
-			name: data.get("name"),
-			email: data.get("email"),
-			password: data.get("password"),
-		});
-	};
+	const { onSubmitRegister } = useContext(UserContext);
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<IUserRequest>({
+		resolver: yupResolver(schemaRegisterUser),
+		reValidateMode: "onSubmit",
+	});
 
 	return (
-		<Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+		<Box
+			component="form"
+			onSubmit={handleSubmit(onSubmitRegister)}
+			noValidate
+			sx={{ mt: 1 }}
+		>
 			<TextField
+				error={errors.name ? true : false}
+				helperText={errors.name ? `${errors.name?.message}` : " "}
 				margin="normal"
-				required
 				fullWidth
 				id="name"
 				label="Nome completo"
-				name="name"
 				autoComplete="name"
 				autoFocus
+				{...register("name")}
 			/>
 			<TextField
+				error={errors.email ? true : false}
+				helperText={errors.email ? `${errors.email?.message}` : " "}
 				margin="normal"
-				required
 				fullWidth
-				name="email"
 				label="Email"
 				type="email"
 				id="email"
 				autoComplete="email"
+				{...register("email")}
 			/>
 			<TextField
+				error={errors.password ? true : false}
+				helperText={
+					errors.password ? `${errors.password?.message}` : " "
+				}
 				margin="normal"
-				required
 				fullWidth
-				name="password"
 				label="Password"
 				type="password"
 				id="password"
 				autoComplete="current-password"
-			/>
-			<TextField
-				margin="normal"
-				required
-				fullWidth
-				name="confirm-password"
-				label="Confirme o password"
-				type="password"
-				id="confirm-password"
+				{...register("password")}
 			/>
 			<Button
 				type="submit"
@@ -62,7 +70,7 @@ const FormRegister = () => {
 				variant="contained"
 				sx={{ mt: 3, mb: 2 }}
 			>
-				Login
+				Cadastrar
 			</Button>
 			<Grid item>
 				<Link
