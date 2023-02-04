@@ -24,6 +24,7 @@ const style = {
 const FormEditContact = React.forwardRef((props, ref) => {
 	const { contact, UpdateContact } = useContext(ClientsContext);
 	const { id, name, email, phone_number } = contact;
+	console.log(id);
 
 	const {
 		register,

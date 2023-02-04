@@ -21,7 +21,8 @@ export interface IClientsContext {
 	handleOpenModalEditContact: () => void;
 	handleCloseModalEditContact: () => void;
 	getClients: () => void;
-	getClientById: (clientId: string) => void;
+	getClientByIdToEdit: (clientId: string) => void;
+	getClientToAddContact: (clientId: string) => void;
 	getContactById: (contactId: string) => void;
 	RegisterClient: (data: IClientRequest) => void;
 	UpdateClient: (data: IClientUpdate) => void;

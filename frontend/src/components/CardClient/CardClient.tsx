@@ -6,10 +6,17 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
-import { IconButton, Modal } from "@mui/material";
+import {
+	Accordion,
+	AccordionDetails,
+	AccordionSummary,
+	IconButton,
+	Modal,
+} from "@mui/material";
 import { IClientProps } from "../../interfaces/IClientProps";
 import FormRegisterContact from "../FormRegisterContact/FormRegisterContact";
 import DialogContent from "@mui/material/DialogContent";
@@ -17,10 +24,10 @@ import CardContact from "../CardContact/CardContact";
 
 const CardClient = ({ client }: IClientProps) => {
 	const {
-		getClientById,
+		getClientByIdToEdit,
+		getClientToAddContact,
 		DeleteClient,
 		openModalRegisterContact,
-		handleOpenModalRegisterContact,
 		handleCloseModalRegisterContact,
 	} = useContext(ClientsContext);
 
@@ -28,13 +35,7 @@ const CardClient = ({ client }: IClientProps) => {
 
 	return (
 		<Grid item xs={2} sm={4} md={4} maxWidth="100%">
-			<Card
-				sx={{
-					minWidth: 250,
-					transition: ".6s",
-					"&:hover": { scale: "1.2" },
-				}}
-			>
+			<Card sx={{ minWidth: 250 }}>
 				<CardContent
 					sx={{
 						display: "flex",
@@ -55,7 +56,7 @@ const CardClient = ({ client }: IClientProps) => {
 						<IconButton
 							aria-label="edit"
 							size="small"
-							onClick={() => getClientById(client!.id)}
+							onClick={() => getClientByIdToEdit(client!.id)}
 						>
 							<EditIcon fontSize="inherit" />
 						</IconButton>
@@ -71,10 +72,10 @@ const CardClient = ({ client }: IClientProps) => {
 				<CardActions>
 					<Button
 						size="small"
-						onClick={handleOpenModalRegisterContact}
+						onClick={() => getClientToAddContact(client!.id)}
 					>
 						<AddIcon />
-						Contatos
+						Contato
 					</Button>
 					<Modal
 						open={openModalRegisterContact}
@@ -83,13 +84,24 @@ const CardClient = ({ client }: IClientProps) => {
 						aria-describedby="modal-modal-description"
 					>
 						<DialogContent>
-							<FormRegisterContact clientId={id} />
+							<FormRegisterContact />
 						</DialogContent>
 					</Modal>
 				</CardActions>
-				{contacts.map((contact) => (
-					<CardContact key={contact.id} contact={contact} />
-				))}
+				<Accordion>
+					<AccordionSummary
+						expandIcon={<ExpandMoreIcon />}
+						aria-controls="panel1a-content"
+						id="panel1a-header"
+					>
+						<Typography>Contatos</Typography>
+					</AccordionSummary>
+					<AccordionDetails>
+						{contacts.map((contact) => (
+							<CardContact key={contact.id} contact={contact} />
+						))}
+					</AccordionDetails>
+				</Accordion>
 			</Card>
 		</Grid>
 	);

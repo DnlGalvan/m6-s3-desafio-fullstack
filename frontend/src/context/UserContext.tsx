@@ -29,11 +29,8 @@ const UserProvider = ({ children }: IUserProvider) => {
 	}, []);
 
 	const SignIn = async (data: IUserLogin) => {
-		console.log(data);
-
 		try {
 			const res = await api.post<IPost>("/login/users", data);
-			console.log(res);
 			const { user } = res.data;
 			const token = JSON.stringify(res.data.token)?.replace(/"/gi, "");
 			setUser(user);

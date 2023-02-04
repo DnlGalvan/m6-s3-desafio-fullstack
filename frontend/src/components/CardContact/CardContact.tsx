@@ -1,6 +1,7 @@
 import {
 	CardContent,
 	DialogContent,
+	Divider,
 	Grid,
 	IconButton,
 	Modal,
@@ -22,50 +23,57 @@ const CardContact = ({ contact }: IContactProps) => {
 	} = useContext(ClientsContext);
 
 	return (
-		<CardContent
-			key={contact.id}
-			sx={{
-				display: "flex",
-				justifyContent: "space-between",
-				alignItems: "center",
-			}}
-		>
-			<Grid>
-				<Typography variant="h6" component="div">
-					{contact.name}
-				</Typography>
-				<Typography sx={{ mb: 1.5 }} color="text.secondary">
-					{contact.email}
-				</Typography>
-				<Typography variant="body2">{contact.phone_number}</Typography>
-			</Grid>
-			<Grid>
-				<IconButton
-					aria-label="edit"
-					size="small"
-					onClick={() => getContactById(contact.id)}
-				>
-					<EditIcon fontSize="inherit" />
-				</IconButton>
-				<Modal
-					open={openModalEditContact}
-					onClose={handleCloseModalEditContact}
-					aria-labelledby="modal-modal-title"
-					aria-describedby="modal-modal-description"
-				>
-					<DialogContent>
-						<FormEditContact />
-					</DialogContent>
-				</Modal>
-				<IconButton
-					aria-label="delete"
-					size="small"
-					onClick={() => DeleteContact(contact.id)}
-				>
-					<DeleteIcon fontSize="inherit" />
-				</IconButton>
-			</Grid>
-		</CardContent>
+		<>
+			<Divider />
+			<CardContent
+				key={contact.id}
+				sx={{
+					padding: "5px 10px",
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+				}}
+			>
+				<Grid>
+					<Typography variant="body1" component="div">
+						{contact.name}
+					</Typography>
+					<Typography variant="body2" color="text.secondary">
+						{contact.email}
+					</Typography>
+					<Typography variant="body2" color="text.secondary">
+						{contact.phone_number}
+					</Typography>
+				</Grid>
+				<Grid>
+					<IconButton
+						aria-label="edit"
+						size="small"
+						onClick={() => getContactById(contact.id)}
+					>
+						<EditIcon fontSize="inherit" />
+					</IconButton>
+					<IconButton
+						aria-label="delete"
+						size="small"
+						onClick={() => DeleteContact(contact.id)}
+					>
+						<DeleteIcon fontSize="inherit" />
+					</IconButton>
+				</Grid>
+			</CardContent>
+			<Divider />
+			<Modal
+				open={openModalEditContact}
+				onClose={handleCloseModalEditContact}
+				aria-labelledby="modal-modal-title"
+				aria-describedby="modal-modal-description"
+			>
+				<DialogContent>
+					<FormEditContact />
+				</DialogContent>
+			</Modal>
+		</>
 	);
 };
 

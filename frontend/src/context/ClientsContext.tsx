@@ -54,12 +54,29 @@ const ClientsProvider = ({ children }: IClientsProvider) => {
 		}
 	};
 
-	const getClientById = async (clientId: string) => {
+	const getClientByIdToEdit = async (clientId: string) => {
 		try {
 			api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 			const res = await api.get<IClient>(`/clients/${clientId}`);
 			setClient(res.data);
 			handleOpenModalEditClient();
+		} catch (error) {
+			const err = error as AxiosError<IError>;
+			console.log(err);
+			if (err.response?.data.message === "Client not found") {
+				toast.error("Cliente não encontrado!");
+			} else {
+				toast.error("Algo deu errado! Tente novamente!");
+			}
+		}
+	};
+
+	const getClientToAddContact = async (clientId: string) => {
+		try {
+			api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+			const res = await api.get<IClient>(`/clients/${clientId}`);
+			setClient(res.data);
+			handleOpenModalRegisterContact();
 		} catch (error) {
 			const err = error as AxiosError<IError>;
 			console.log(err);
@@ -77,6 +94,7 @@ const ClientsProvider = ({ children }: IClientsProvider) => {
 			await api.post<IClientRequest>("/clients", data);
 			toast.success("Cliente cadastrado com sucesso!");
 			handleCloseModalRegisterClient();
+			getClients();
 		} catch (error) {
 			const err = error as AxiosError<IError>;
 			console.log(err);
@@ -94,7 +112,6 @@ const ClientsProvider = ({ children }: IClientsProvider) => {
 	};
 
 	const UpdateClient = async (data: IClientUpdate) => {
-		console.log(data);
 		try {
 			api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 			await api.patch<IClientUpdate>(`/clients/${data.id}`, data);
@@ -227,7 +244,8 @@ const ClientsProvider = ({ children }: IClientsProvider) => {
 				handleOpenModalEditContact,
 				handleCloseModalEditContact,
 				getClients,
-				getClientById,
+				getClientByIdToEdit,
+				getClientToAddContact,
 				getContactById,
 				RegisterClient,
 				UpdateClient,
