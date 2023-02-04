@@ -11,7 +11,7 @@ import updateClientController from "../controllers/client/updateClient.controlle
 const clientsRoutes = Router();
 
 clientsRoutes.post("", createClientController);
-clientsRoutes.get("", authMiddleware, listAllClientsController);
+clientsRoutes.get("", listAllClientsController);
 clientsRoutes.get("/:id", authMiddleware, retrieveClientController);
 clientsRoutes.patch("/:id", authMiddleware, updateClientController);
 clientsRoutes.delete("/:id", authMiddleware, deleteClientController);
