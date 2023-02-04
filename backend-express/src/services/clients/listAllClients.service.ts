@@ -7,7 +7,9 @@ const listAllClientsService = async (): Promise<Clients[]> => {
 		relations: { contacts: true },
 	});
 
-	return clients;
+	const ordenedClients = clients.sort((a, b) => a.name.localeCompare(b.name));
+
+	return ordenedClients;
 };
 
 export default listAllClientsService;
