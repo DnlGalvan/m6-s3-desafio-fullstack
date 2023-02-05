@@ -40,3 +40,9 @@ docker compose up
 <hr>
 
 
+## `Acessse o Frontend`
+
+```
+http://localhost:3000
+```
+
