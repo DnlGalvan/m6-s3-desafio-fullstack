@@ -34,13 +34,30 @@
 
 ## `Instruções para rodar o porjeto com DOCKER`
 
+### - Dentro da pasta BACKEND-EXPRESS crie o arquivo .env conforme o .env.example: troque o "postgres_user" e o "postgress_password" do DATABASE_URL e as demais variáveis pelos seus dados.
+
+<br>
+
+```
+DATABASE_URL="postgres://postgres_user:postgres_password@customer_base_db:5432/customer_base_db"
+SECRET_KEY=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=customer_base_db
+
+```
+
+<hr>
+<br>
+
+### - Na pasta raiz do projeto Fullstack, abra o terminal e execute o comando:
 ```
 docker compose up
 ```
 <hr>
+<br>
 
-
-## `Acessse o Frontend`
+## `Acessse o Frontend pelo navegador`
 
 ```
 http://localhost:3000
