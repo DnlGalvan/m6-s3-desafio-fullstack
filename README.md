@@ -34,6 +34,9 @@
 
 ## `Instruções para rodar o porjeto com DOCKER`
 
+### OBS.: Esta aplicação utiliza por padrão as PORTAS: 3000, 5433 e 8000. Certifique-se que estas portas estajam livres em sua maquina para que não haja conflitos!! 
+<br>
+
 ### - Dentro da pasta BACKEND-EXPRESS crie o arquivo .env conforme o .env.example: troque o "postgres_user" e o "postgress_password" do DATABASE_URL e as demais variáveis pelos seus dados.
 
 <br>
